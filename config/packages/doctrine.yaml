@@ -1,0 +1,27 @@
+doctrine:
+    dbal:
+        # configure these for your database server
+        driver: 'pdo_mysql'
+        server_version: 'mariadb-10.3.14'
+        charset: utf8mb4
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
+        dbname:               kids
+        host:                 kids.backndev.fr
+        port:                 3309
+        user:                 damien
+        password:             Platine74
+    #        driver:               pdo_mysql
+    #        url: 'mariadb://192.168.144.2:3306/admin'
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
