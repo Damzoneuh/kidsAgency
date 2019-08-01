@@ -6,6 +6,12 @@
 /public/bundles/
 /var/
 /vendor/
+.env
+.env.test
+.idea
+phpunit.xml.dist
+symfony.lock
+
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###

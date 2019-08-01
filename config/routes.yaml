@@ -1,3 +1,33 @@
 index:
     path: /
     controller: App\Controller\HomeController::index
+
+##################################### crud news api #################################################
+api_get_news:
+    path: /api/news/{id}
+    controller: App\Controller\NewsController::getNews
+    methods: [HEAD, GET]
+    defaults:   { id: null }
+    requirements:
+        id: \d+
+
+api_create_news:
+    path: /api/news/create
+    controller: App\Controller\NewsController::createNews
+    methods: [HEAD, POST]
+
+api_news_update:
+    path: /api/news/update/{id}
+    controller: App\Controller\NewsController::updateNews
+    methods: [HEAD, PUT, OPTIONS]
+    requirements:
+        id: \d+
+
+api_news_delete:
+    path: /api/news/delete/{id}
+    controller: App\Controller\NewsController::deleteNews
+    methods: [HEAD, DELETE]
+    requirements:
+        id: \d+
+
+################################################# end crud news api #########################################
