@@ -1,3 +1,119 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+    path: /
+    controller: App\Controller\HomeController::index
+
+##################################### crud news api #################################################
+
+api_get_news:
+    path: /api/news/{id}
+    controller: App\Controller\NewsController::getNews
+    methods: [HEAD, GET]
+    defaults:   { id: null }
+    requirements:
+        id: \d+
+
+api_create_news:
+    path: /api/news/create
+    controller: App\Controller\NewsController::createNews
+    methods: [HEAD, POST]
+
+api_news_update:
+    path: /api/news/update/{id}
+    controller: App\Controller\NewsController::updateNews
+    methods: [HEAD, PUT, OPTIONS]
+    requirements:
+        id: \d+
+
+api_news_delete:
+    path: /api/news/delete/{id}
+    controller: App\Controller\NewsController::deleteNews
+    methods: [HEAD, DELETE]
+    requirements:
+        id: \d+
+
+################################################# end crud news api #########################################
+
+############################################### crud slider ############################################
+
+api_get_slider_img:
+    path: /api/slider/img
+    controller: App\Controller\SliderController::getSliderImage
+    methods: [HEAD, GET]
+    requirements:
+        id: \d+
+
+api_create_slider_img:
+    path: /api/slider/img/create
+    controller: App\Controller\SliderController::createSliderImage
+    methods: [HEAD, POST]
+
+api_update_slider_img:
+    path: /api/slider/img/update/{id}
+    controller: App\Controller\SliderController::updateSliderImage
+    methods: [HEAD, OPTIONS, PUT]
+    requirements:
+        id: \d+
+
+api_delete_slider_img:
+    path: /api/slider/img/delete/{id}
+    controller: App\Controller\SliderController::deleteSliderImage
+    methods: [HEAD, DELETE]
+    requirements:
+        id: \d+
+
+################################################ end crud slider ##########################################
+
+###################################### CRUD image ################################################
+
+api_get_img:
+    path: /api/img/{id}
+    controller: App\Controller\ImageController::getImage
+    methods: [HEAD, GET]
+    defaults:    { id: null }
+    requirements:
+        id: \d+
+
+api_create_img:
+    path: /api/img/create
+    controller: App\Controller\ImageController::createImage
+    methods: [HEAD, POST]
+
+api_delete_img:
+    path: /api/img/delete/{id}
+    controller: App\controller\ImageController::deleteImage
+    methods: [HEAD, DELETE]
+    requirements:
+        id: \d+
+
+########################################### end CRUD image ############################################
+
+####################################### CRUD partner ##############################################
+
+api_get_partner:
+    path: /api/partner/{id}
+    controller: App\Controller\PartnerController::getPartner
+    methods: [HEAD, GET]
+    defaults: {id: null}
+    requirements:
+        id: \d+
+
+api_create_partner:
+    path: /api/partner/create/
+    controller: App\Controller\PartnerController::createPartner
+    methods: [HEAD, POST]
+
+api_update_partner:
+    path: /api/partner/update/{id}
+    controller: App\Controller\PartnerController::updatePartner
+    methods: [HEAD, OPTION, PUT]
+    requirements:
+        id: \d+
+
+api_delete_partner:
+    path: /api/partner/delete/{id}
+    controller: App\Controller\PartnerController::deletePartner
+    methods: [HEAD, DELETE]
+    requirements:
+        id: \d+
+
+############################################ end CRUD partner ##########################################
