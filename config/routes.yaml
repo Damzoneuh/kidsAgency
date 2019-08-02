@@ -84,3 +84,36 @@ api_delete_img:
     methods: [HEAD, DELETE]
     requirements:
         id: \d+
+
+########################################### end CRUD image ############################################
+
+####################################### CRUD partner ##############################################
+
+api_get_partner:
+    path: /api/partner/{id}
+    controller: App\Controller\PartnerController::getPartner
+    methods: [HEAD, GET]
+    defaults: {id: null}
+    requirements:
+        id: \d+
+
+api_create_partner:
+    path: /api/partner/create/
+    controller: App\Controller\PartnerController::createPartner
+    methods: [HEAD, POST]
+
+api_update_partner:
+    path: /api/partner/update/{id}
+    controller: App\Controller\PartnerController::updatePartner
+    methods: [HEAD, OPTION, PUT]
+    requirements:
+        id: \d+
+
+api_delete_partner:
+    path: /api/partner/delete/{id}
+    controller: App\Controller\PartnerController::deletePartner
+    methods: [HEAD, DELETE]
+    requirements:
+        id: \d+
+
+############################################ end CRUD partner ##########################################
