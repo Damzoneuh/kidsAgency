@@ -6,6 +6,7 @@
 parameters:
     de.trans.file: '%kernel.project_dir%/translations/messages.de.yaml'
     fr.trans.file: '%kernel.project_dir%/translations/messages.fr.yaml'
+    img.path: '%kernel.project_dir%/storage/img'
 
 services:
     # default configuration for services in *this* file

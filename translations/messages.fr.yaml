@@ -1,2 +1,17 @@
-Bad api key: Erreur dans la clé api
-news added: L'actualité à été mise à jour
+'Bad api key': 'Erreur dans la clé api'
+'news added': 'L''actualité à été mise à jour'
+'my title': 'mon titre'
+'my text': 'mon texte'
+'news updated': 'La publication à été mise à jour'
+'my text update': 'mon texte mis à jour'
+'news deleted': 'La publication à été supprimée'
+'news not found': 'La publication est introuvable'
+'image not found': 'Aucune image trouvée'
+'slider image added': 'L''image du slider à bien été ajoutée'
+'the slider image is now disabled': 'L''image du slider est maintenant désactivée'
+'the slider image is now enabled': 'L''image du slider est maintenant activée'
+'the slider image as been deleted': 'L''image du slider à été suprimée'
+'the image format is incorrect': 'Le format de l''image est incorecte'
+'image added': 'L''image à été ajoutée'
+'img title': 'titre d''image'
+image removed: L'image à été supprimée
