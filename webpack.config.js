@@ -68,6 +68,7 @@ Encore
     // uncomment if you use API Platform Admin (composer req api-admin)
     .enableReactPreset()
     .addEntry('home', './assets/js/home.js')
+    .addEntry('profile', './assets/js/profile.js')
 ;
 
 module.exports = Encore.getWebpackConfig();
