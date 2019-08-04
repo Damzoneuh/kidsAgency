@@ -117,3 +117,25 @@ api_delete_partner:
         id: \d+
 
 ############################################ end CRUD partner ##########################################
+
+############################################ users ###############################################
+
+app_logout:
+    path: /logout
+    methods: GET
+
+user_registration:
+    path: /register/{space}
+    controller: App\Controller\RegistrationController::register
+
+user_confirm_registration:
+    path: /registration/confirmation/{token}
+    controller: App\Controller\RegistrationController::confirmRegistration
+
+user_reset_password:
+    path: /reseting
+    controller: App\Controller\RegistrationController::resetPassword
+
+user_set_new_password:
+    path: /reseting/{token}
+    controller: App\Controller\RegistrationController::confirmReset

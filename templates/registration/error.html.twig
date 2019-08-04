@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}{{ parent() }}{% endblock %}
+{% block title %}{{ parent() }} Error{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert-danger">Une erreur est survenue</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
