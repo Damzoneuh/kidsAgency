@@ -10,7 +10,10 @@ use App\Form\RegistrationFormType;
 use App\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -19,6 +22,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationController extends AbstractController
 {
@@ -94,7 +99,6 @@ class RegistrationController extends AbstractController
      * @Route("/registration/consfirmation/{token}", name="user_confirm_registration")
      */
     public function confirmRegistration(Request $request, $token){
-        //TODO finir l'inscription après checkout
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->findOneBy(['reset_key' => $token]);
         if (null !== $user){
@@ -166,6 +170,8 @@ class RegistrationController extends AbstractController
                 $em->persist($profile);
                 $em->flush();
                 $user->setProfile($profile);
+                $user->setResetKey(null);
+                $user->setIsMailChecked(true);
                 $em->flush();
                 return $this->redirectToRoute('index');
             }
@@ -173,6 +179,113 @@ class RegistrationController extends AbstractController
         }
         return $this->render('registration/error.html.twig');
     }
+
+    /**
+     * @param Request $request
+     * @param \Swift_Mailer $mailer
+     * @return Response
+     * @throws \Exception
+     * @Route("/reseting" , name="user_reset_password")
+     */
+    public function resetPassword(Request $request, \Swift_Mailer $mailer){
+        $form = $this->createFormBuilder();
+        $form->add('email', EmailType::class, [
+            'attr' => [
+                'class' => 'form-control'
+            ]
+        ])
+            ->add('submit', SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-group btn-primary'
+                ]
+            ]);
+        $resetForm = $form->getForm();
+        $resetForm->handleRequest($request);
+        if ($resetForm->isSubmitted() && $resetForm->isValid()){
+            $uniq = self::generateToken();
+            $data = $resetForm->getData();
+            $em = $this->getDoctrine()->getManager();
+            $user = $em->getRepository(User::class)->findOneBy(['email' => $data['email']]);
+            if(null !== $user){
+                $user->setResetKey($uniq);
+                $em->flush();
+                $message = new \Swift_Message();
+                $message->setTo($data['email']);
+                $message->setFrom($this->getParameter('noreply.address'));
+                $message->setSubject('Reseting password');
+                $message->setBody('
+                    <div>
+                        <h1>Réinitialisation de mot de passe</h1>
+                        <p>Afin de réinitialiser votre mot de passe merci de cliquer sur le lien ci-dessous</p>
+                        <a class="btn btn-group btn-primary" href="' . $this->getParameter('app.url') . '/reseting/' . $uniq . '">Réinitialiser mon mot de passe</a>
+                    </div>
+                ', 'text/html');
+                $mailer->send($message);
+
+                return $this->render('reseting/resetingEndpoint.html.twig');
+            }
+
+            return $this->render('reseting/resetingForm.html.twig', ['form' => $resetForm->createView()]);
+        }
+
+        return $this->render('reseting/resetingForm.html.twig', ['form' => $resetForm->createView()]);
+    }
+
+    /**
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @param $token
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route("/reseting/{token}", name="user_set_new_password")
+     */
+    public function confirmReset(Request $request, UserPasswordEncoderInterface $encoder, $token){
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)->findOneBy(['reset_key' => $token]);
+        if (null !== $user){
+            $form = $this->createFormBuilder();
+            $form
+                ->add('plainPassword', RepeatedType::class, [
+                    'type' => PasswordType::class,
+                    'first_options' => ['label' => 'enter password'],
+                    'second_options' => ['label' => 'repeat the password'],
+                    // instead of being set onto the object directly,
+                    // this is read and encoded in the controller
+                    'mapped' => false,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Please enter a password',
+                        ]),
+                        new Length([
+                            'min' => 6,
+                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            // max length allowed by Symfony for security reasons
+                            'max' => 4096,
+                        ]),
+                    ],
+                ])
+                ->add('submit', SubmitType::class, [
+                    'attr' => [
+                        'class' => 'btn btn-group btn-primary'
+                    ]
+                ]);
+            $resetForm = $form->getForm();
+            $resetForm->handleRequest($request);
+            if ($resetForm->isSubmitted() && $resetForm->isValid()){
+                $user->setPassword(
+                    $encoder->encodePassword($user, $resetForm->get('plainPassword')->getData())
+                );
+                $user->setResetKey(null);
+                $user->setUpdatedAt(new \DateTime('now'));
+                $em->flush();
+
+                return $this->redirectToRoute('app_login');
+            }
+
+            return $this->render('reseting/setNewPassword.html.twig', ['form' => $resetForm->createView()]);
+        }
+        return $this->redirectToRoute('user_reset_password');
+    }
+
     /**
      * @return String
      * @throws \Exception

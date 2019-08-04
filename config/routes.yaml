@@ -131,3 +131,11 @@ user_registration:
 user_confirm_registration:
     path: /registration/confirmation/{token}
     controller: App\Controller\RegistrationController::confirmRegistration
+
+user_reset_password:
+    path: /reseting
+    controller: App\Controller\RegistrationController::resetPassword
+
+user_set_new_password:
+    path: /reseting/{token}
+    controller: App\Controller\RegistrationController::confirmReset
